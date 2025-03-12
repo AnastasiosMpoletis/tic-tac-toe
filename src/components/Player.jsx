@@ -4,20 +4,34 @@ import { useState } from 'react';
  * @param {*} param0 
  * @returns Player component
  */
-export default function Player({ name, symbol }) {
+export default function Player({ initialName, symbol }) {
+    const [playerName, setPlayerName] = useState(initialName);
     const [isEditing, setIsEditing] = useState(false);
 
     function handleEditClick() {
-        setIsEditing(!isEditing);
+        // If new state depends on the previous state value, pass a function to state updating function.
+        // State updates are not performed instantly but at some time in the future (when React has time for it)
+        setIsEditing((editing) => !editing);
     }
 
-    let playerName = isEditing ? <input type="text" required value={name} /> : <span className="player-name">{name}</span>;
-    let buttonCaption = isEditing ? 'Save' : 'Edit';
+    /**
+     * Event is passed automatically by React when the event is triggered.
+     * @param {*} event 
+     */
+    function handleChange(event) {
+        setPlayerName(event.target.value);
+    }
+
+    let editablePlayerName = isEditing ?
+        (<input type="text" required value={playerName} onChange={handleChange} />) : // Two-way binding
+        (<span className="player-name">{playerName}</span>);
+
+    let buttonCaption = isEditing ? "Save" : "Edit";
 
     return (
         <li>
             <span className="player">
-                {playerName}
+                {editablePlayerName}
                 <span className="player-symbol">{symbol}</span>
             </span>
             <button onClick={handleEditClick}>{buttonCaption}</button>
