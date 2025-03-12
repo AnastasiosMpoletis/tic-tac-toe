@@ -12,7 +12,7 @@ const initialGameBoard = [
 /**
  * @returns GameBoard component
  */
-export default function GameBoard() {
+export default function GameBoard({ onSelectSquare, activePlayerSymbol }) {
     const [gameBoard, setGameBoard] = useState(initialGameBoard);
 
     /**
@@ -26,9 +26,11 @@ export default function GameBoard() {
             //object.assign() is used to create a shallow copy of the previousGameBoard
             //slice() is used to create a shallow copy of the previousGameBoard
             const updatedBoard = [...previousGameBoard.map(innerArray => [...innerArray])];
-            updatedBoard[rowIndex][colIndex] = 'X';
+            updatedBoard[rowIndex][colIndex] = activePlayerSymbol;
             return updatedBoard;
         });
+
+        onSelectSquare();
     }
 
     return (
