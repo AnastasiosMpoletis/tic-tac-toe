@@ -2,11 +2,10 @@ import { useState } from 'react';
 import Player from './components/Player.jsx';
 import GameBoard from './components/GameBoard.jsx';
 import Log from './components/Log.jsx';
+import GameOver from './components/GameOver.jsx';
 import { WINNING_COMBINATIONS } from './winning-combinations.js';
 
-/**
- * GameBoard instance
- */
+// GameBoard instance
 const initialGameBoard = [
   [null, null, null],
   [null, null, null],
@@ -27,24 +26,22 @@ function deriveActivePlayer(gameTurns) {
 }
 
 function App() {
-  //Lifting the state up. The state is managed by the parent component App to Player, GameBoard and Log components.
+  // Lifting the state up. The state is managed by the parent component App to Player, GameBoard and Log components.
   const [gameTurns, setGameTurns] = useState([]);
 
   const activePlayer = deriveActivePlayer(gameTurns);
 
   let gameBoard = initialGameBoard;
   for (const turn of gameTurns) {
-    const { square, player } = turn; //deconstruct turn
-    const { row, col } = square; //deconstruct square
+    const { square, player } = turn; // Deconstruct turn
+    const { row, col } = square; // Deconstruct square
 
-    gameBoard[row][col] = player; //update board cell
+    gameBoard[row][col] = player; // Update board cell
   }
 
   let winner;
 
-  /**
-   * Check if a player has won the game
-   */
+  // Check if a player has won the game
   for (const combination of WINNING_COMBINATIONS) {
     const firstSquareSymbol = gameBoard[combination[0].row][combination[0].column];
     const secondSquareSymbol = gameBoard[combination[1].row][combination[1].column];
@@ -55,10 +52,13 @@ function App() {
       firstSquareSymbol === secondSquareSymbol &&
       firstSquareSymbol === thirdSquareSymbol
     ) {
-      //Game Over
+      //Set winner
       winner = firstSquareSymbol;
     }
   }
+
+  // Check if there is a draw. All turns have passed and no winner is set.
+  const hasDraw = gameTurns.length === 9 && !winner; 
 
   /**
    * Updates GameBoard state, Log when a square is selected. 
@@ -103,8 +103,7 @@ function App() {
           />
         </ol>
 
-        {/* Display winner */}
-        {winner && <p>Player {winner} wins!</p>}
+        {(winner || hasDraw) && <GameOver winner={winner} />}
 
         <GameBoard
           onSelectSquare={handleSelectSquare}
