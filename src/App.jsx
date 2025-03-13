@@ -2,6 +2,16 @@ import { useState } from 'react';
 import Player from './components/Player.jsx';
 import GameBoard from './components/GameBoard.jsx';
 import Log from './components/Log.jsx';
+import { WINNING_COMBINATIONS } from './winning-combinations.js';
+
+/**
+ * GameBoard instance
+ */
+const initialGameBoard = [
+  [null, null, null],
+  [null, null, null],
+  [null, null, null]
+];
 
 /**
  * @param {*} gameTurns 
@@ -21,6 +31,21 @@ function App() {
   const [gameTurns, setGameTurns] = useState([]);
 
   const activePlayer = deriveActivePlayer(gameTurns);
+
+  let gameBoard = initialGameBoard;
+  for (const turn of gameTurns) {
+    const { square, player } = turn; //deconstruct turn
+    const { row, col } = square; //deconstruct square
+
+    gameBoard[row][col] = player; //update board cell
+  }
+
+  for (const combination of WINNING_COMBINATIONS) {
+    //TODO ANBOL Implement the logic to check if a player has won the game
+    // const firstSymbol;
+    // const secondSymbol;
+    // const thirdSymbol;
+  }
 
   /**
    * Updates GameBoard state, Log when a square is selected. 
@@ -67,7 +92,7 @@ function App() {
 
         <GameBoard
           onSelectSquare={handleSelectSquare}
-          turns={gameTurns}
+          board={gameBoard}
         />
       </div>
       <Log turns={gameTurns} />
