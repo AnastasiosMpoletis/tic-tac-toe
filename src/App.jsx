@@ -3,10 +3,24 @@ import Player from './components/Player.jsx';
 import GameBoard from './components/GameBoard.jsx';
 import Log from './components/Log.jsx';
 
+/**
+ * @param {*} gameTurns 
+ * @returns Active player by previous board state
+ */
+function deriveActivePlayer(gameTurns) {
+  let currentPlayer = "X";
+  if (gameTurns.length > 0 && gameTurns[0].player === "X") {
+    currentPlayer = "O";
+  }
+
+  return currentPlayer;
+}
+
 function App() {
   //Lifting the state up. The state is managed by the parent component App to Player, GameBoard and Log components.
-  const [activePlayer, setActivePlayer] = useState("X");
   const [gameTurns, setGameTurns] = useState([]);
+
+  const activePlayer = deriveActivePlayer(gameTurns);
 
   /**
    * Updates GameBoard state, Log when a square is selected. 
@@ -18,13 +32,8 @@ function App() {
      * object.assign() is used to create a shallow copy of the previousGameBoard
      * slice() is used to create a shallow copy of the previousGameBoard
      */
-
-    // Creates a copy of the previous state, updates it and returns it.
-    setActivePlayer((currentActivePlayer) => currentActivePlayer === "X" ? "O" : "X");
-    
     setGameTurns((previousGameTurns) => {
-      const isCurrentPlayerX = previousGameTurns.length > 0 && previousGameTurns[0].player === "X";
-      let currentPlayer = isCurrentPlayerX ? "O" : "X";
+      const currentPlayer = deriveActivePlayer(previousGameTurns);
 
       const updatedTurns = [
         {
@@ -60,9 +69,8 @@ function App() {
           onSelectSquare={handleSelectSquare}
           turns={gameTurns}
         />
-
-        <Log />
       </div>
+      <Log turns={gameTurns} />
     </main>
   )
 }
