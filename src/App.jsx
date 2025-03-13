@@ -40,11 +40,24 @@ function App() {
     gameBoard[row][col] = player; //update board cell
   }
 
+  let winner;
+
+  /**
+   * Check if a player has won the game
+   */
   for (const combination of WINNING_COMBINATIONS) {
-    //TODO ANBOL Implement the logic to check if a player has won the game
-    // const firstSymbol;
-    // const secondSymbol;
-    // const thirdSymbol;
+    const firstSquareSymbol = gameBoard[combination[0].row][combination[0].column];
+    const secondSquareSymbol = gameBoard[combination[1].row][combination[1].column];
+    const thirdSquareSymbol = gameBoard[combination[2].row][combination[2].column];
+
+    if (
+      firstSquareSymbol &&
+      firstSquareSymbol === secondSquareSymbol &&
+      firstSquareSymbol === thirdSquareSymbol
+    ) {
+      //Game Over
+      winner = firstSquareSymbol;
+    }
   }
 
   /**
@@ -89,6 +102,9 @@ function App() {
             isActive={activePlayer === "O"}
           />
         </ol>
+
+        {/* Display winner */}
+        {winner && <p>Player {winner} wins!</p>}
 
         <GameBoard
           onSelectSquare={handleSelectSquare}
