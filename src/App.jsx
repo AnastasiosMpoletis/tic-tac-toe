@@ -26,6 +26,12 @@ function deriveActivePlayer(gameTurns) {
 }
 
 function App() {
+  // Player names by symbol instance
+  const [player, setPlayer] = useState({
+    X: 'Player 1',
+    O: 'Player 2'
+  });
+
   // Lifting the state up. The state is managed by the parent component App to Player, GameBoard and Log components.
   const [gameTurns, setGameTurns] = useState([]);
 
@@ -53,8 +59,8 @@ function App() {
       firstSquareSymbol === secondSquareSymbol &&
       firstSquareSymbol === thirdSquareSymbol
     ) {
-      //Set winner
-      winner = firstSquareSymbol;
+      //Set winner's name
+      winner = player[firstSquareSymbol];
     }
   }
 
@@ -95,6 +101,20 @@ function App() {
     setGameTurns([]);
   }
 
+  /**
+   * Updates Players name by symbol in Player component.
+   * @param {*} symbol 
+   * @param {*} newName 
+   */
+  function handlePlayerNameChange(symbol, newName) {
+    setPlayer((previousPlayers) => {
+      return {
+        ...previousPlayers,
+        [symbol]: newName
+      };
+    });
+  }
+
   return (
     <main>
       <div id="game-container">
@@ -103,11 +123,13 @@ function App() {
             initialName="Player 1"
             symbol="X"
             isActive={activePlayer === "X"}
+            onChangeName={handlePlayerNameChange}
           />
           <Player
             initialName="Player 2"
             symbol="O"
             isActive={activePlayer === "O"}
+            onChangeName={handlePlayerNameChange}
           />
         </ol>
 

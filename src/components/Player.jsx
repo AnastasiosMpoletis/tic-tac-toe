@@ -4,7 +4,7 @@ import { useState } from 'react';
  * @param {*} param0 
  * @returns Player component
  */
-export default function Player({ initialName, symbol, isActive }) {
+export default function Player({ initialName, symbol, isActive, onChangeName }) {
     const [playerName, setPlayerName] = useState(initialName);
     const [isEditing, setIsEditing] = useState(false);
 
@@ -12,6 +12,10 @@ export default function Player({ initialName, symbol, isActive }) {
         // If new state depends on the previous state value, pass a function to state updating function.
         // State updates are not performed instantly but at some time in the future (when React has time for it)
         setIsEditing((editing) => !editing);
+
+        if (isEditing) {
+            onChangeName(symbol, playerName);
+        }
     }
 
     /**
