@@ -31,7 +31,8 @@ function App() {
 
   const activePlayer = deriveActivePlayer(gameTurns);
 
-  let gameBoard = initialGameBoard;
+  // We want to shallow copy initialGameBoard to reset gameBoard and restart the game.
+  let gameBoard = [...initialGameBoard.map(array => [...array])];
   for (const turn of gameTurns) {
     const { square, player } = turn; // Deconstruct turn
     const { row, col } = square; // Deconstruct square
@@ -58,7 +59,7 @@ function App() {
   }
 
   // Check if there is a draw. All turns have passed and no winner is set.
-  const hasDraw = gameTurns.length === 9 && !winner; 
+  const hasDraw = gameTurns.length === 9 && !winner;
 
   /**
    * Updates GameBoard state, Log when a square is selected. 
@@ -87,6 +88,13 @@ function App() {
     });
   }
 
+  /**
+   * Restarts the game by setting the gameTurns to an empty array. The rest are reset by the useState hooks and React.
+   */
+  function handleRestart() {
+    setGameTurns([]);
+  }
+
   return (
     <main>
       <div id="game-container">
@@ -103,7 +111,7 @@ function App() {
           />
         </ol>
 
-        {(winner || hasDraw) && <GameOver winner={winner} />}
+        {(winner || hasDraw) && <GameOver winner={winner} onRestart={handleRestart} />}
 
         <GameBoard
           onSelectSquare={handleSelectSquare}
