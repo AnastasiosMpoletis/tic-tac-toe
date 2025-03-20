@@ -1,2 +1,2 @@
-# Tic-Tak-Toe-Git
+# tic-tak-toe
 Tic-Tak-Toe game
